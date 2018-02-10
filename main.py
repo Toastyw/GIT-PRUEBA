@@ -6,6 +6,7 @@
 import pygame as pg
 import random
 from settings import *
+from level import *
 from sprites import *
 
 class Game:
@@ -22,10 +23,13 @@ class Game:
         # start a new game
         self.all_sprites = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
-        
+
+        self.first_level = Level(self)
+        self.first_level.map_design_1()
 
         self.player = Player(self)
         self.all_sprites.add(self.player)
+        """
 
         p1 = Platform(0,HEIGHT-40,WIDTH,40)
         self.all_sprites.add(p1)
@@ -33,15 +37,17 @@ class Game:
         p2 = Platform(150,400,200,50)
         self.all_sprites.add(p2)
 
-        
+        p3 = Platform(100,300,200,50)
+        self.all_sprites.add(p3)
 
         p4 = Platform(400,HEIGHT-200,20,300)
-        self.all_sprites.add(p4)
+        self.all_sprites.add(p4)"""
+        """
 
         self.platforms.add(p4)
-        
+        self.platforms.add(p3)
         self.platforms.add(p2)
-        self.platforms.add(p1)
+        self.platforms.add(p1)"""
         self.run()
 
 
@@ -58,28 +64,25 @@ class Game:
         # Game Loop - Update
         self.all_sprites.update()
         #check if player hits platform - only if falling
-        if self.player.state == "CAENDO":
-            hits = pg.sprite.spritecollide(self.player,self.platforms,False)
-            if hits:
-                print self.player.state
-                print self.player.acc.y
-                self.player.vel.y = 0
-                self.player.pos.y = hits[0].rect.top +1
-                
-                
-
+        """
         if self.player.state == "SUBIENDO":
             hits = pg.sprite.spritecollide(self.player,self.platforms,False)
             if hits:
-                print self.player.state
-                print self.player.acc.y
+                
                 self.player.vel.y = 0
                 self.player.rect.top = 0
-        print self.player.rect.top                
+                print self.player.rect.top    
+
+        if self.player.state == "CAENDO":
+            hits = pg.sprite.spritecollide(self.player,self.platforms,False)
+            if hits:
+                
+                self.player.vel.y = 0
+                self.player.pos.y = hits[0].rect.top +1"""
+                
                 
 
-       
-        
+                   
 
         """hits = pg.sprite.spritecollide(self.player,self.platforms,False)
         if hits:

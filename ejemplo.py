@@ -30,7 +30,7 @@ class Player(object):
                 if dx < 0: # Moving left; Hit the right side of the wall
                     self.rect.left = wall.rect.right
                 if dy > 0: # Moving down; Hit the top side of the wall
-                    self.rect.bottom = wall.rect.top
+                    self.rect.bottom = wall.rect.top +1
                 if dy < 0: # Moving up; Hit the bottom side of the wall
                     self.rect.top = wall.rect.bottom
     def gravity(self):
