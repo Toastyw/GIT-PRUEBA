@@ -1,9 +1,9 @@
 # game options/settings
 TITLE = "Jumpy!"
-WIDTH = 480
-HEIGHT = 600
+WIDTH = 1280
+HEIGHT = 720
 FPS = 60
-GRAVITY = 1
+GRAVITY = 0.8
 #Player propertie section
 PLAYER_ACC = 1
 PLAYER_FRICTION = -0

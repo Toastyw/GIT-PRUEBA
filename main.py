@@ -8,46 +8,37 @@ import random
 from settings import *
 from level import *
 from sprites import *
-
+from pygame.locals import *
 class Game:
     def __init__(self):
-        # initialize game window, etc
+        # initialize game window, etc   
         pg.init()
         pg.mixer.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT),pg.RESIZABLE)
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.running = True
+        self.player = Player(self)
+        self.background = pg.image.load("Sprites\dackground.png")
+        self.background = pg.transform.scale(self.background,(WIDTH,HEIGHT))
+        self.background = self.background.convert()
+        
+
+        
 
     def new(self):
         # start a new game
         self.all_sprites = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
+        self.player_things = pg.sprite.Group()
 
         self.first_level = Level(self)
-        self.first_level.map_design_1()
+        """self.first_level.map_design_1()"""
+        self.first_level.map_design_2()
 
         self.player = Player(self)
-        self.all_sprites.add(self.player)
-        """
-
-        p1 = Platform(0,HEIGHT-40,WIDTH,40)
-        self.all_sprites.add(p1)
-
-        p2 = Platform(150,400,200,50)
-        self.all_sprites.add(p2)
-
-        p3 = Platform(100,300,200,50)
-        self.all_sprites.add(p3)
-
-        p4 = Platform(400,HEIGHT-200,20,300)
-        self.all_sprites.add(p4)"""
-        """
-
-        self.platforms.add(p4)
-        self.platforms.add(p3)
-        self.platforms.add(p2)
-        self.platforms.add(p1)"""
+        self.player_things.add(self.player)
+        
         self.run()
 
 
@@ -56,47 +47,19 @@ class Game:
         self.playing = True
         while self.playing:
             self.clock.tick(FPS)
+            
             self.events()
             self.update()
             self.draw()
 
+
     def update(self):
         # Game Loop - Update
+        
         self.all_sprites.update()
+        self.player_things.update()
         #check if player hits platform - only if falling
-        """
-        if self.player.state == "SUBIENDO":
-            hits = pg.sprite.spritecollide(self.player,self.platforms,False)
-            if hits:
-                
-                self.player.vel.y = 0
-                self.player.rect.top = 0
-                print self.player.rect.top    
-
-        if self.player.state == "CAENDO":
-            hits = pg.sprite.spritecollide(self.player,self.platforms,False)
-            if hits:
-                
-                self.player.vel.y = 0
-                self.player.pos.y = hits[0].rect.top +1"""
-                
-                
-
-                   
-
-        """hits = pg.sprite.spritecollide(self.player,self.platforms,False)
-        if hits:
-            if self.player.vel.y > 0:
-                self.player.pos.y = hits[0].rect.top +1
-                self.player.vel.y = 0
-
-            if self.player.vel.y < 0:
-                self.player.rect.top = hits[0].rect.bottom
-                self.player.vel.y = 0
-
-            if self.player.vel.x > 0:
-                self.player.rect.right = hits[0].rect.left
-                self.player.vel.x = 0"""
+        
 
 
     def events(self):
@@ -110,11 +73,20 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.player.jump()
+                    self.player.jump_wall()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_x:
+                    self.player.how_attack()
+                    
 
     def draw(self):
         # Game Loop - draw
-        self.screen.fill(BLACK)
+        self.screen.blit(self.background,(0,0))
         self.all_sprites.draw(self.screen)
+        self.player_things.draw(self.screen)
+        pg.draw.rect(self.screen,Color('red'),self.player.rect,1)
+        pg.draw.rect(self.screen,Color('blue'),self.player.hitbox,1)
+        pg.draw.rect(self.screen,Color('green'),self.player.rect_ground_detector,1)
         # *after* drawing everything, flip the display
         pg.display.flip()
 
@@ -129,6 +101,7 @@ class Game:
 g = Game()
 g.show_start_screen()
 while g.running:
+    
     g.new()
     g.show_go_screen()
 
