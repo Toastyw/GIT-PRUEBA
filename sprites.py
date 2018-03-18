@@ -1,4 +1,3 @@
-#Sprite classes for platform game
 import pygame as pg
 from settings import *
 from attacking import *
@@ -23,20 +22,25 @@ class Player(pg.sprite.Sprite):
 		self.not_ground = False
 		
 
-		
-		
-
 		self.pos = vec(60,60)
 		self.vel = vec(0,0)
 		self.acc = vec(0,0)
+		self.vel_y_max = 15
 		self.rect_ground_detector=pg.Rect(0,0,self.rect.width,4)
 		self.direction = "RIGHT"
 
-		self.time = 0
-		self.is_attacking = False
+		self.time_saber = 0
+		self.time_buster = 0
+		self.is_attacking_saber = False
+		self.is_attacking_buster = False
 		
 		self.gravedad = GRAVITY
 
+		
+
+		self.another_bool = True
+		self.setup_timers_frames()
+	def setup_timers_frames(self):
 		self.c = 0
 		self.d = 0
 
@@ -55,13 +59,13 @@ class Player(pg.sprite.Sprite):
 		self.ll = 0
 		self.o = 0
 
-		self.another_bool = True
-		
+		self.p = 0
+		self.q = 0
+
 	def sprite_setup(self):
+		#Moving Right
 		self.sheet_moving_right = []
-		"""
-		self.image_1 =  get_image(self.sheet,3,12,34,55)
-		self.sheet_moving_right.append(self.image_1)"""
+		
 
 		self.image_1 =  get_image(self.sheet,48,12,93,55)
 		self.sheet_moving_right.append(self.image_1)
@@ -93,11 +97,8 @@ class Player(pg.sprite.Sprite):
 		self.image_1 =  get_image(self.sheet,553,7,598,49)
 		self.sheet_moving_right.append(self.image_1)
 
-
+		#moving left
 		self.sheet_moving_left = []
-		"""
-		self.image_1 =  get_image(self.sheet,3,12,34,55,True)
-		self.sheet_moving_right.append(self.image_1)"""
 
 		self.image_1 =  get_image(self.sheet,48,12,93,55,True)
 		self.sheet_moving_left.append(self.image_1)
@@ -143,11 +144,7 @@ class Player(pg.sprite.Sprite):
 		self.image_1 =  get_image(self.sheet,3,12,40,55,True)
 
 		self.sheet_idle_left.append(self.image_1)
-		"""
-		self.sheet_moving_right = load_sheet(self.sheet,False,0,50,50,11)
-		self.sheet_moving_left = load_sheet(self.sheet,True,0,50,50,11)
-		self.sheet_idle_left = load_sheet(self.sheet,True,50,50,50,1)
-		self.sheet_idle_right = load_sheet(self.sheet,False,50,50,50,1)"""
+		
 		#elevandose a la derecha
 		self.sheet_ascending_right = []
 
@@ -206,83 +203,96 @@ class Player(pg.sprite.Sprite):
 
 		#attacking right
 
-		self.sheet_attacking_right = []
+		self.sheet_attacking_saber_standing_right = []
 		
 		self.image_1 =  get_image(self.sheet,6,201,42,243)
-		self.sheet_attacking_right.append(self.image_1)
+		self.sheet_attacking_saber_standing_right.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,47,201,81,243)
-		self.sheet_attacking_right.append(self.image_1)
+		self.sheet_attacking_saber_standing_right.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,91,200,136,242)
-		self.sheet_attacking_right.append(self.image_1)
+		self.sheet_attacking_saber_standing_right.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,152,198,200,241)
-		self.sheet_attacking_right.append(self.image_1)
+		self.sheet_attacking_saber_standing_right.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,283,191,362,242)
-		self.sheet_attacking_right.append(self.image_1)
+		self.sheet_attacking_saber_standing_right.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,376,198,455,239)
-		self.sheet_attacking_right.append(self.image_1)
+		self.sheet_attacking_saber_standing_right.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,464,204,543,238)
-		self.sheet_attacking_right.append(self.image_1)
+		self.sheet_attacking_saber_standing_right.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,552,203,627,237)
-		self.sheet_attacking_right.append(self.image_1)
+		self.sheet_attacking_saber_standing_right.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,635,203,704,237)
-		self.sheet_attacking_right.append(self.image_1)
+		self.sheet_attacking_saber_standing_right.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,716,205,760,239)
-		self.sheet_attacking_right.append(self.image_1)
+		self.sheet_attacking_saber_standing_right.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,771,197,815,239)
-		self.sheet_attacking_right.append(self.image_1)
+		self.sheet_attacking_saber_standing_right.append(self.image_1)
 
 		#Attacking left
 
-		self.sheet_attacking_left = []
+		self.sheet_attacking_saber_standing_left = []
 		
 		self.image_1 =  get_image(self.sheet,6,201,42,243,True)
-		self.sheet_attacking_left.append(self.image_1)
+		self.sheet_attacking_saber_standing_left.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,47,201,81,243,True)
-		self.sheet_attacking_left.append(self.image_1)
+		self.sheet_attacking_saber_standing_left.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,91,200,136,242,True)
-		self.sheet_attacking_left.append(self.image_1)
+		self.sheet_attacking_saber_standing_left.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,152,198,200,241,True)
-		self.sheet_attacking_left.append(self.image_1)
+		self.sheet_attacking_saber_standing_left.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,283,191,362,242,True)
-		self.sheet_attacking_left.append(self.image_1)
+		self.sheet_attacking_saber_standing_left.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,376,198,455,239,True)
-		self.sheet_attacking_left.append(self.image_1)
+		self.sheet_attacking_saber_standing_left.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,464,204,543,238,True)
-		self.sheet_attacking_left.append(self.image_1)
+		self.sheet_attacking_saber_standing_left.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,552,203,627,237,True)
-		self.sheet_attacking_left.append(self.image_1)
+		self.sheet_attacking_saber_standing_left.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,635,203,704,237,True)
-		self.sheet_attacking_left.append(self.image_1)
+		self.sheet_attacking_saber_standing_left.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,716,205,760,239,True)
-		self.sheet_attacking_left.append(self.image_1)
+		self.sheet_attacking_saber_standing_left.append(self.image_1)
 
 		self.image_1 =  get_image(self.sheet,771,197,815,239,True)
-		self.sheet_attacking_left.append(self.image_1)
+		self.sheet_attacking_saber_standing_left.append(self.image_1)
 		
+		#Attacking Buster
+		self.sheet_attacking_buster_standing_right = []
+
+		self.image_1 =  get_image(self.sheet,462,143,507,186)
+		self.sheet_attacking_buster_standing_right.append(self.image_1)
+
+		self.sheet_attacking_buster_standing_left = []
+
+		self.image_1 =  get_image(self.sheet,462,143,507,186,True)
+		self.sheet_attacking_buster_standing_left.append(self.image_1)
+
+
 		#Sliding Right
 		self.sheet_sliding_right = []
 
 		self.image_1 =  get_image(self.sheet,771,197,815,239,True)
 		self.sheet_sliding_right.append(self.image_1)
+
 
 
 
@@ -299,20 +309,7 @@ class Player(pg.sprite.Sprite):
 		hits1 = pg.sprite.spritecollide(self,self.game.platforms,False,collided_1)
 		if hits1:
 			self.vel.y =-15
-		"""
-		for plat in self.game.platforms:
-			if self.rect_ground_detector.colliderect(plat.rect):
-				
-				self.vel.y =-15
-		"""
-		"""
-		hits = pg.sprite.spritecollide(self.rect_ground_detector,self.game.platforms,False)
-		if self.rect_ground_detector.colliderect(self.game.platforms[0].rect):
-			print "saltando"
-			self.vel.y =-10
-		if hits:
-			print "saltando"
-			self.vel.y =-10 """
+		
 	def jump_wall(self):
 		hits1 = pg.sprite.spritecollide(self,self.game.platforms,False,collided)
 		if self.not_ground and hits1:
@@ -320,13 +317,7 @@ class Player(pg.sprite.Sprite):
 			
 
 	def update(self):
-		"""
-		hits = pg.sprite.spritecollide(self,self.game.platforms,False)
-		if hits:
-			self.acc = vec(0,0)
-			
-		else:
-			self.acc = vec(0,GRAVITY)"""
+		
 		
 		self.hitbox.center = self.rect.center
 		self.rect_ground_detector.centerx = self.rect.centerx
@@ -335,27 +326,13 @@ class Player(pg.sprite.Sprite):
 		self.comprov_falling()
 
 		keys = pg.key.get_pressed()
+		self.attack_saber_comprobation()
+		self.attack_buster_comprobation()
+	
 
-		
-		
-
-		if self.is_attacking:
-			self.state = "ATTACKING"
-
-			self.time =pg.time.get_ticks()
-			
-			self.atack.rect.left = self.rect.right + 5
-			self.atack.rect.centery = self.rect.centery
-			if self.atack.final < pg.time.get_ticks():
-				self.k = 0
-				self.l = 0
-				self.atack.kill()
-
-				self.is_attacking =False
-
-		if keys[pg.K_LEFT]:
+		if keys[pg.K_LEFT] and (not self.is_attacking_saber) and (not self.is_attacking_buster):
 			self.acc.x = -PLAYER_ACC
-			self.movement(-2)
+			self.movement_x(-3)
 			
 			if not self.not_ground:
 				self.state = "MOVING"
@@ -364,9 +341,9 @@ class Player(pg.sprite.Sprite):
 		else:
 			self.vel.x = 0
 
-		if keys[pg.K_RIGHT]:
+		if keys[pg.K_RIGHT] and (not self.is_attacking_saber) and (not self.is_attacking_buster):
 			self.acc.x = PLAYER_ACC
-			self.movement(2)
+			self.movement_x(3)
 			
 			if not self.not_ground:
 				self.state = "MOVING"
@@ -381,39 +358,22 @@ class Player(pg.sprite.Sprite):
 			self.rect.inflate_ip(-1,0)
 
 		self.sprite_animation()
-		"""
-		if self.state == "IDLE VERTICAL":
-			if self.direction == "LEFT":
-				self.k,self.image = animation(self.k,self.sheet_max_height_left)
-			if self.direction == "RIGHT":
-				self.l,self.image = animation(self.l,self.sheet_descending_right)
-		"""
+		
 		
 		
 
 
 		self.gravity()
-		"""
-		#apply friction
-		self.acc.x += self.vel.x*PLAYER_FRICTION
-		#equations of position
-		self.vel += self.acc
-
-		self.pos.y += self.vel.y + 0.5*self.acc.y
-		self.pos.x += self.vel.x + 0.5*self.acc.x
-		self.rect.midbottom = self.pos
-		self.status()"""
-		print self.c
-		
+		self.collide_detection_y_axis()
 		
 	def sprite_animation(self):
 		if self.state == "MOVING":
 			if self.direction == "LEFT":
-				self.d,self.image = animation(self.d,self.sheet_moving_left,1,1)[0:2]
+				self.d,self.image = animation(self.d,self.sheet_moving_left,0.5,1)[0:2]
 			if self.direction == "RIGHT":
-				self.c,self.image = animation(self.c,self.sheet_moving_right,1,1)[0:2]
+				self.c,self.image = animation(self.c,self.sheet_moving_right,0.5,1)[0:2]
 
-		if self.state  == "IDLE HORIZONTAL" and (not self.is_attacking):
+		if self.state  == "IDLE HORIZONTAL" and (not self.is_attacking_saber) and (not self.is_attacking_buster):
 			self.c = 0
 			self.d = 0
 
@@ -434,16 +394,22 @@ class Player(pg.sprite.Sprite):
 		
 		if self.state == "CAENDO":
 			if self.direction == "LEFT":
-				self.i,self.image = animation(self.i,self.sheet_descending_left,0.6,0)[0:2]
+				self.i,self.image = animation(self.i,self.sheet_descending_left,0.8,0)[0:2]
 			if self.direction == "RIGHT":
-				self.j,self.image = animation(self.j,self.sheet_descending_right,0.6,0)[0:2]
+				self.j,self.image = animation(self.j,self.sheet_descending_right,0.8,0)[0:2]
 
-		if self.state == "ATTACKING":
+		if self.state == "ATTACKING_SABER":
 			if self.direction == "LEFT":
-				self.k,self.image = animation(self.k,self.sheet_attacking_left,0.4,0)[0:2]
+				self.k,self.image = animation(self.k,self.sheet_attacking_saber_standing_left,0.4,0)[0:2]
 				
 			if self.direction == "RIGHT":
-				self.l,self.image = animation(self.l,self.sheet_attacking_right,0.4,0)[0:2]
+				self.l,self.image = animation(self.l,self.sheet_attacking_saber_standing_right,0.4,0)[0:2]
+
+		if self.state == "ATTACKING_BUSTER":
+			if self.direction == "LEFT":
+				self.p,self.image = animation(self.l,self.sheet_attacking_buster_standing_left,0.4,0)[0:2]
+			if self.direction == "RIGHT":
+				self.q,self.image = animation(self.l,self.sheet_attacking_buster_standing_right,0.4,0)[0:2]
 
 		if self.state == "IDLE VERTICAL":
 			if self.direction == "LEFT":
@@ -467,19 +433,9 @@ class Player(pg.sprite.Sprite):
 				self.state = "IDLE VERTICAL"
 		elif self.vel.x == 0:
 			self.state = "IDLE HORIZONTAL"
-	def movement(self,velx):
-		if velx != 0:
-			self.move_single_axis(velx)
-			self.vel.x = velx
-		
-	def move_single_axis(self,velx):
-		
-		
-		velx += self.acc.x
+	def movement_x(self,velx):
 		
 		self.rect.x+=velx
-		
-		
 
 		hits = pg.sprite.spritecollide(self,self.game.platforms,False)
 		if hits:
@@ -487,16 +443,17 @@ class Player(pg.sprite.Sprite):
 			if velx>0:
 				self.rect.right = hits[0].rect.left
 				
-				print "derecha"
 			if velx<0:
 				self.rect.left= hits[0].rect.right
-				
-				
 			
 	def gravity(self):
 		
 		self.vel.y +=  self.gravedad
+		if self.vel.y >= self.vel_y_max:
+			self.vel.y = self.vel_y_max
 		self.rect.y += self.vel.y
+
+	def collide_detection_y_axis(self):
 		hits = pg.sprite.spritecollide(self,self.game.platforms,False)
 		
 
@@ -516,52 +473,63 @@ class Player(pg.sprite.Sprite):
 				self.vel.y = 0
 				self.rect.top = hits[0].rect.bottom
 				
-		
-	
 
-
-		
-		
-		
 				
-	def how_attack(self):
+	def saber_attack(self):
 		
-		"""
-		self.hbox = Platform(self.rect.right,self.rect.centery,10,10,RED)
-		self.game.all_sprites.add(self.hbox)
-		self.control_time(self.hbox)"""
-		if self.time +100 < pg.time.get_ticks():
+		if self.time_saber +100 < pg.time.get_ticks():
 			
-			self.is_attacking = True
-			self.atack = Attack(self)
-			self.game.all_sprites.add(self.atack)
-		
-		
-		
-		
-		
-		
-
-	def control_time(self,action):
-		
-		"""self.time += self.game.clock.get_time()
-		if self.time > 3060:
-			action.kill()
-			self.time = 0"""
-		self.inicio = pg.time.get_ticks()
-		self.inicio += 3000
-		
-		if pg.time.get_ticks() > self.inicio:
-
-			action.kill()
-		"""if self.inicio 
-		while self.time <40000:
-			self.time +=self.game.clock.get_ticks()
-			print self.time
-		action.kill()
-		self.time = 0"""
+			self.is_attacking_saber = True
+			self.attack_saber = SaberAttack(self)
+			self.game.all_sprites.add(self.attack_saber)
 
 
+
+			
+	def attack_saber_comprobation(self):	
+		
+
+		if self.is_attacking_saber:
+			self.state = "ATTACKING_SABER"
+
+			self.time_saber=pg.time.get_ticks()
+			
+			self.attack_saber.rect.left = self.rect.right + 5
+			self.attack_saber.rect.centery = self.rect.centery
+			if self.attack_saber.final < pg.time.get_ticks():
+				self.k = 0
+				self.l = 0
+				self.attack_saber.kill()
+
+				self.is_attacking_saber =False
+	def buster_attack(self):
+		if self.time_buster +50 < pg.time.get_ticks():
+			
+			self.attack_buster = BusterAttack(self,self.direction)
+			self.game.buster_bullets.add(self.attack_buster)
+			self.is_attacking_buster = True
+
+	def attack_buster_comprobation(self):	
+			
+
+		if self.is_attacking_buster:
+			self.state = "ATTACKING_BUSTER"
+
+			self.time_saber=pg.time.get_ticks()
+			
+			
+			if self.attack_buster.final < pg.time.get_ticks():
+				self.p = 0
+				self.q = 0
+
+				self.is_attacking_buster =False
+		if self.game.buster_bullets:
+			bullet = pg.sprite.groupcollide(self.game.buster_bullets,self.game.platforms,True,False)
+			if self.attack_buster.rect.x > self.rect.x +700:
+				self.attack_buster.kill()
+		
+		
+		
 class Platform(pg.sprite.Sprite):
 	def __init__(self,x,y,w,h,text):
 		pg.sprite.Sprite.__init__(self)
@@ -587,10 +555,7 @@ class Box(pg.sprite.Sprite):
 		self.rect.x = x
 		self.rect.y = y
 
-class Control_time(pg.sprite.Sprite):
-	def __init__(self):
-		pg.sprite.Sprite.__init__(self)
-		self.time = 0
+
 		
 def animation(c,group,velocidad,frame_iteracion):
 	c+=0.1666666667
@@ -606,12 +571,6 @@ def animation(c,group,velocidad,frame_iteracion):
 				k=frame_iteracion
 	image = group[k]
 	rect = image.get_rect()
-	
-	"""
-	ventana.blit(group[k],(0,0))
-	k = str(k)
-	texto = font.render(k,1,(255,255,255),)
-	ventana.blit(texto,(300,300))"""
 	
 	
 

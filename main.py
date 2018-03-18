@@ -1,8 +1,3 @@
-# KidsCanCode - Game Development with Pygame video series
-# Jumpy! (a platform game) - Part 1
-# Video link: https://www.youtube.com/watch?v=uWvb3QzA48c
-# Project setup
-
 import pygame as pg
 import random
 from settings import *
@@ -31,12 +26,15 @@ class Game:
         self.all_sprites = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
         self.player_things = pg.sprite.Group()
+        self.buster_bullets = pg.sprite.Group()
 
         self.first_level = Level(self)
         """self.first_level.map_design_1()"""
         self.first_level.map_design_2()
 
         self.player = Player(self)
+        
+
         self.player_things.add(self.player)
         
         self.run()
@@ -46,8 +44,7 @@ class Game:
         # Game Loop
         self.playing = True
         while self.playing:
-            self.clock.tick(FPS)
-            
+            self.clock.tick(FPS)  
             self.events()
             self.update()
             self.draw()
@@ -58,6 +55,7 @@ class Game:
         
         self.all_sprites.update()
         self.player_things.update()
+        self.buster_bullets.update()
         #check if player hits platform - only if falling
         
 
@@ -76,7 +74,10 @@ class Game:
                     self.player.jump_wall()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_x:
-                    self.player.how_attack()
+                    self.player.saber_attack()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_z:
+                    self.player.buster_attack()
                     
 
     def draw(self):
@@ -84,6 +85,7 @@ class Game:
         self.screen.blit(self.background,(0,0))
         self.all_sprites.draw(self.screen)
         self.player_things.draw(self.screen)
+        self.buster_bullets.draw(self.screen)
         pg.draw.rect(self.screen,Color('red'),self.player.rect,1)
         pg.draw.rect(self.screen,Color('blue'),self.player.hitbox,1)
         pg.draw.rect(self.screen,Color('green'),self.player.rect_ground_detector,1)
